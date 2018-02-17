@@ -1,0 +1,12 @@
+projet_platform_home:
+    path:      /{id}
+    defaults:
+        _controller: PROJETPlatformBundle:Ticket:index
+        id:        1
+    requirements:
+        id: \d+
+
+projet_platform_addTest:
+    path:      /addTest
+    defaults:
+        _controller: PROJETPlatformBundle:Ticket:addTest
