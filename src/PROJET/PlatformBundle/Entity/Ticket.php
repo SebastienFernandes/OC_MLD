@@ -50,9 +50,9 @@ class Ticket
     private $birthDate;
 
     /**
-     * @var string
+     * @var bool
      *
-     * @ORM\Column(name="type", type="string", length=255)
+     * @ORM\Column(name="type", type="boolean")
      */
     private $type;
 
@@ -69,6 +69,20 @@ class Ticket
      * @ORM\Column(name="email", type="string", length=255)
      */
     private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="rateType", type="string", length=255)
+     */
+    private $rateType;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="rate", type="integer")
+     */
+    private $rate;
 
 
     /**
@@ -194,7 +208,7 @@ class Ticket
     /**
      * Get type
      *
-     * @return string
+     * @return bool
      */
     public function getType()
     {
@@ -248,5 +262,52 @@ class Ticket
     {
         return $this->email;
     }
-}
 
+    /**
+     * Set rateType
+     *
+     * @param string $rateType
+     *
+     * @return Ticket
+     */
+    public function setRateType($rateType)
+    {
+        $this->rateType = $rateType;
+
+        return $this;
+    }
+
+    /**
+     * Get rateType
+     *
+     * @return string
+     */
+    public function getRateType()
+    {
+        return $this->rateType;
+    }
+
+    /**
+     * Set rate
+     *
+     * @param integer $rate
+     *
+     * @return Ticket
+     */
+    public function setRate($rate)
+    {
+        $this->rate = $rate;
+
+        return $this;
+    }
+
+    /**
+     * Get rate
+     *
+     * @return integer
+     */
+    public function getRate()
+    {
+        return $this->rate;
+    }
+}
