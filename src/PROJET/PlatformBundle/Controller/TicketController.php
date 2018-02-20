@@ -32,39 +32,19 @@ class TicketController extends Controller
     	$ticket->setReducedPrice($reduced = false);
     	$ticket->setEmail('Bob@email.com');
 //------------------------------------------------------------
-        $d    = new \Datetime();
-        $d2   = date_format($d,'Y');
-        $d3   = date_format($d,'md');
-        $ddn2 = date_format($ddn,'Y');
-        $ddn3 = date_format($ddn,'md');
-        $age  = $d2 - $ddn2;
-        if ($d3 < $ddn3){
-            $age = $age - 1;
-        }
-//------------------------------------------------------------
-        if ($age < 4){
-            $rateType = 'free';
-            $rate     = 0;
-        }elseif (12 <= $age && $reduced == true){
-            $rateType = 'reduced';
-            $rate     = 10;            
-        }elseif (4 <= $age && $age < 12){
-            $rateType = 'child';
-            $rate     = 8;
-        }elseif (12 <= $age && $age < 60){
-            $rateType = 'normal';
-            $rate     = 16;
-        }elseif (60 <= $age){
-            $rateType = 'old';
-            $rate     = 12;
-        }
+        $repository = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('PROJETPlatformBundle:Ticket')
+        ;
 
-        if ($dayType == true){
-            $rate = $rate / 2;
-        }
+        $age      = $repository->calculateAge($ddn);
+        $rateType = $repository->calculateRateType($age, $reduced);
+        $rate     = $repository->calculateRate($rateType, $dayType);
 //------------------------------------------------------------
         $ticket->setRateType($rateType);
         $ticket->setRate($rate);
+        var_dump($rateType);
         var_dump($rate);
 
     	$em = $this->getDoctrine()->getManager();
