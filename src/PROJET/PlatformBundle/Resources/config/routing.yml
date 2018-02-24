@@ -10,3 +10,8 @@ projet_platform_addTest:
     path:      /addTest
     defaults:
         _controller: PROJETPlatformBundle:Ticket:addTest
+
+projet_platform_add:
+    path:      /add
+    defaults:
+        _controller: PROJETPlatformBundle:Ticket:add

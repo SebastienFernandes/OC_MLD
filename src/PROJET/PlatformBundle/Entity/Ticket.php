@@ -54,14 +54,14 @@ class Ticket
      *
      * @ORM\Column(name="type", type="boolean")
      */
-    private $type;
+    private $type = true;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="reducedPrice", type="boolean")
      */
-    private $reducedPrice;
+    private $reducedPrice = true;
 
     /**
      * @var string
