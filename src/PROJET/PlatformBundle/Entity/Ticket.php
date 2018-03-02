@@ -66,13 +66,6 @@ class Ticket
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255)
-     */
-    private $email;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="rateType", type="string", length=255)
      */
     private $rateType;
@@ -237,30 +230,6 @@ class Ticket
     public function getReducedPrice()
     {
         return $this->reducedPrice;
-    }
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     *
-     * @return Ticket
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
     }
 
     /**

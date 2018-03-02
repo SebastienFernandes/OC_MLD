@@ -6,12 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use PROJET\PlatformBundle\Entity\Ticket;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use PROJET\PlatformBundle\Entity\Reservation;
+use PROJET\PlatformBundle\Form\TicketType;
+use PROJET\PlatformBundle\Form\ReservationType;
 
 class TicketController extends Controller
 {
@@ -59,47 +56,39 @@ class TicketController extends Controller
 
     public function addAction(Request $request)
     {
-        $ticket      = new Ticket();
-        $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $ticket);
+        $reservation = new Reservation();
 
-        $formBuilder
-            ->add('lastName',     TextType::class)
-            ->add('firstName',    TextType::class)
-            ->add('country',      TextType::class)
-            ->add('birthDate',    DateType::class, array('widget' => 'choice'))
-            ->add('type',         CheckboxType::class, array('required' => false))
-            ->add('reducedPrice', CheckboxType::class, array('required' => false))
-            ->add('email',        TextType::class)
-            ->add('save',         SubmitType::class)
-        ;
+        $form = $this->get('form.factory')->create(ReservationType::class, $reservation);
 
-        $form = $formBuilder->getForm();
-
-        if ($request->isMethod('POST')){
+        if ($request->isMethod('POST'))
+        {
             $form->handleRequest($request);
-
             $price = $this->container->get('projet_platform.price');
-
-            $ddn      = $ticket->getBirthDate();
-            $reduced  = $ticket->getReducedPrice();
-            $dayType  = $ticket->getType();
-            $age      = $price->calculateAge($ddn);
-            $rateType = $price->calculateRateType($age, $reduced);
-            $rate     = $price->calculateRate($rateType, $dayType);
-
-            $ticket->setRateType($rateType);
-            $ticket->setRate($rate);
-
             $em = $this->getDoctrine()->getManager();
-            $em->persist($ticket);
+
+            foreach ($reservation->getTickets() as $ticket) {
+                $ddn      = $ticket->getBirthDate();
+                $reduced  = $ticket->getReducedPrice();
+                $dayType  = $ticket->getType();
+                $age      = $price->calculateAge($ddn);
+                $rateType = $price->calculateRateType($age, $reduced);
+                $rate     = $price->calculateRate($rateType, $dayType);
+                $ticket->setRateType($rateType);
+                $ticket->setRate($rate);
+                var_dump($ticket);
+                $em->persist($ticket);
+            }
+
+            
+            $em->persist($reservation);
             $em->flush();
 
-            return $this->redirectToRoute('projet_platform_home', array('id' => $ticket->getId()));
+            return $this->redirectToRoute('projet_platform_home');
         }
+        
 
-
-        return $this->render('PROJETPlatformBundle:Ticket:add.html.twig', array(
-            'form' => $form->createView(),
+        return $this->render('PROJETPlatformBundle:Reservation:add.html.twig', array(
+          'form' => $form->createView(),
         ));
     }
 }

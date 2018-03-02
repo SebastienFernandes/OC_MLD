@@ -12,6 +12,9 @@ projet_platform_addTest:
         _controller: PROJETPlatformBundle:Ticket:addTest
 
 projet_platform_add:
-    path:      /add
+    path:      /add/{fn}
     defaults:
         _controller: PROJETPlatformBundle:Ticket:add
+        fn:        1
+    requirements:
+        fn: \d+

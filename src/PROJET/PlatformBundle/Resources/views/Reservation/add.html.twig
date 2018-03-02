@@ -1,0 +1,53 @@
+<h3>Formulaire de réservation!</h3>
+
+
+
+<div>
+	{{ form_start(form) }}
+		{{ form_row(form.date) }}
+		{{ form_row(form.email) }}
+		<h3>Tickets</h3>
+	    <ul class="tickets" data-prototype="{{ form_widget(form.tickets.vars.prototype)|e('html_attr') }}">
+	    </ul>
+	{{ form_end(form) }}
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript">
+	var $addTicketLink = $('<a href="#" class="add_ticket_link">Add a ticket</a>');
+	var $newLinkLi     = $('<li></li>').append($addTicketLink);
+
+	jQuery(document).ready(function() {
+		var $collectionHolder = $('ul.tickets');
+		$collectionHolder.append($newLinkLi);
+		$collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+		$addTicketLink.on('click', function(e) {
+			e.preventDefault();
+			addTicketForm($collectionHolder, $newLinkLi);
+		});
+	});
+
+	function addTicketForm($collectionHolder, $newLinkLi) {
+	    var prototype = $collectionHolder.data('prototype');
+	    var index     = $collectionHolder.data('index');
+		var newForm   = prototype;
+
+	    newForm = newForm.replace(/__name__/g, index);
+
+	    $collectionHolder.data('index', index + 1);
+
+	    var $newFormLi = $('<li></li>').append(newForm);
+	    $newFormLi.append('<a href="#" class="remove-ticket">remove ticket</a>')
+	    $newLinkLi.before($newFormLi);
+
+	    $('.remove-ticket').click(function(e) {
+	        e.preventDefault();
+	        
+	        $(this).parent().remove();
+	        
+	        return false;
+	    });
+	}
+
+</script>
