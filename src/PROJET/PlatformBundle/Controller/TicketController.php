@@ -14,44 +14,16 @@ class TicketController extends Controller
 {
     public function indexAction($id)
     {
-    	$repository = $this
-	        ->getDoctrine()
-	        ->getManager()
-	        ->getRepository('PROJETPlatformBundle:Ticket')
-      	;
+    	$em          = $this->getDoctrine()->getManager();
+        $reservation = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
+    	$apiEmail    = $reservation->getEmail();
+        var_dump($apiEmail);
 
-      	$ticket = $repository->find($id);
-    	$api    = $ticket;
-        return new response(var_dump($api)) ;
-    }
+        foreach ($reservation->getTickets() as $ticket) {
+            var_dump($ticket);
+        }
 
-    public function addTestAction()
-    {
-    	$ticket = new Ticket();
-    	$ticket->setLastName('TAUNT');
-    	$ticket->setFirstName('Bob');
-    	$ticket->setCountry('France');
-    	$ticket->setBirthDate($ddn = new \Datetime('14-01-1988'));
-    	$ticket->setType($dayType = false);
-    	$ticket->setReducedPrice($reduced = false);
-    	$ticket->setEmail('Bob@email.com');
-
-        $price = $this->container->get('projet_platform.price');
-
-        $age      = $price->calculateAge($ddn);
-        $rateType = $price->calculateRateType($age, $reduced);
-        $rate     = $price->calculateRate($rateType, $dayType);
-
-        $ticket->setRateType($rateType);
-        $ticket->setRate($rate);
-        var_dump($rateType);
-        var_dump($rate);
-
-    	$em = $this->getDoctrine()->getManager();
-    	$em->persist($ticket);
-    	//$em->flush();
-
-        return new Response("ajout test!") ;
+        return $this->render('PROJETPlatformBundle:Reservation:index.html.twig', array('reservation' => $reservation));
     }
 
     public function addAction(Request $request)
@@ -83,12 +55,27 @@ class TicketController extends Controller
             $em->persist($reservation);
             $em->flush();
 
-            return $this->redirectToRoute('projet_platform_home');
+            return $this->redirectToRoute('projet_platform_home', array('id' => $reservation->getId()));
         }
         
 
         return $this->render('PROJETPlatformBundle:Reservation:add.html.twig', array(
           'form' => $form->createView(),
         ));
+    }
+
+    public function delAction($id)
+    {
+        $em          = $this->getDoctrine()->getManager();
+        $reservation = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
+
+        foreach ($reservation->getTickets() as $ticket) {
+            $em->remove($ticket);
+        }
+
+        $em->remove($reservation);
+        $em->flush();
+
+        return $this->redirectToRoute('projet_core_homepage');
     }
 }

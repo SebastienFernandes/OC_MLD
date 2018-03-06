@@ -6,11 +6,6 @@ projet_platform_home:
     requirements:
         id: \d+
 
-projet_platform_addTest:
-    path:      /addTest
-    defaults:
-        _controller: PROJETPlatformBundle:Ticket:addTest
-
 projet_platform_add:
     path:      /add/{fn}
     defaults:
@@ -18,3 +13,11 @@ projet_platform_add:
         fn:        1
     requirements:
         fn: \d+
+
+projet_platform_del:
+    path:      /del/{id}
+    defaults:
+        _controller: PROJETPlatformBundle:Ticket:del
+        id:        1
+    requirements:
+        id: \d+
