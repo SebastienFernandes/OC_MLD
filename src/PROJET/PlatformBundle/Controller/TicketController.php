@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use PROJET\PlatformBundle\Entity\Ticket;
 use PROJET\PlatformBundle\Entity\Reservation;
+use PROJET\PlatformBundle\Entity\TicketCount;
 use PROJET\PlatformBundle\Form\TicketType;
 use PROJET\PlatformBundle\Form\ReservationType;
 
@@ -29,14 +30,15 @@ class TicketController extends Controller
     public function addAction(Request $request)
     {
         $reservation = new Reservation();
-
-        $form = $this->get('form.factory')->create(ReservationType::class, $reservation);
+        $form        = $this->get('form.factory')->create(ReservationType::class, $reservation);
 
         if ($request->isMethod('POST'))
         {
             $form->handleRequest($request);
-            $price = $this->container->get('projet_platform.price');
-            $em = $this->getDoctrine()->getManager();
+            $price         = $this->container->get('projet_platform.price');
+            $ticketCounter = $this->container->get('projet_platform.count');
+            $em            = $this->getDoctrine()->getManager();
+            $tc            = $ticketCounter->addTicketCounter($em, $reservation);            
 
             foreach ($reservation->getTickets() as $ticket) {
                 $ddn      = $ticket->getBirthDate();
@@ -47,11 +49,10 @@ class TicketController extends Controller
                 $rate     = $price->calculateRate($rateType, $dayType);
                 $ticket->setRateType($rateType);
                 $ticket->setRate($rate);
-                var_dump($ticket);
                 $em->persist($ticket);
             }
 
-            
+            $em->persist($tc);
             $em->persist($reservation);
             $em->flush();
 
@@ -66,13 +67,21 @@ class TicketController extends Controller
 
     public function delAction($id)
     {
-        $em          = $this->getDoctrine()->getManager();
-        $reservation = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
+        $em            = $this->getDoctrine()->getManager();
+        $reservation   = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
+        $ticketCounter = $this->container->get('projet_platform.count');
+        $tc            = $ticketCounter->removeTicketCounter($em, $reservation);
 
         foreach ($reservation->getTickets() as $ticket) {
             $em->remove($ticket);
         }
 
+        if ($tc->getNumbers() <= 0) {
+            $em->remove($tc);
+        } else {
+            $em->persist($tc);
+        }
+        
         $em->remove($reservation);
         $em->flush();
 

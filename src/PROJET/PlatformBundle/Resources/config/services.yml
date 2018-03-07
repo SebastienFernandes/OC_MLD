@@ -1,6 +1,9 @@
 services:
     projet_platform.price:
         class: PROJET\PlatformBundle\Price\Price
+
+    projet_platform.count:
+        class: PROJET\PlatformBundle\Count\Count
 #    projet_platform.example:
 #        class: PROJET\PlatformBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
