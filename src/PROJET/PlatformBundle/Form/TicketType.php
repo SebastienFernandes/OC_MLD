@@ -22,10 +22,14 @@ class TicketType extends AbstractType
             ->add('lastName',       TextType::class)
             ->add('firstName',      TextType::class)
             ->add('country',        TextType::class)
-            ->add('birthDate',      DateType::class, array('widget' => 'choice'))
+            ->add('birthDate',      DateType::class, array(
+                'widget' => 'choice',
+                'years'  => range(date('Y'), date('Y')-100)))
             ->add('type',           CheckboxType::class, array('required' => false))
             ->add('reducedPrice',   CheckboxType::class, array('required' => false));
-    }/**
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
