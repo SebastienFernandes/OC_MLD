@@ -42,13 +42,13 @@ class Price
 		if ($rateType == 'free'){
             $rate = 0;
         }elseif ($rateType == 'reduced'){
-            $rate = 10;      
+            $rate = 1000;      
         }elseif ($rateType == 'child'){
-            $rate = 8;
+            $rate = 800;
         }elseif ($rateType == 'normal'){
-            $rate = 16;
+            $rate = 1600;
         }elseif ($rateType == 'old'){
-            $rate = 12;
+            $rate = 1200;
         }
 
         if ($dayType == true){

@@ -19,12 +19,18 @@ class TicketController extends Controller
         $reservation = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
     	$apiEmail    = $reservation->getEmail();
         var_dump($apiEmail);
+        $price = 0;
 
         foreach ($reservation->getTickets() as $ticket) {
             var_dump($ticket);
+            $price = $price + $ticket->getRate();
         }
+        var_dump($price);
 
-        return $this->render('PROJETPlatformBundle:Reservation:index.html.twig', array('reservation' => $reservation));
+        return $this->render('PROJETPlatformBundle:Reservation:index.html.twig', array(
+            'reservation' => $reservation,
+            'price' => $price
+        ));
     }
 
     public function addAction(Request $request)
@@ -86,5 +92,39 @@ class TicketController extends Controller
         $em->flush();
 
         return $this->redirectToRoute('projet_core_homepage');
+    }
+
+    public function billingAction(Request $request, $id)
+    {
+        $em          = $this->getDoctrine()->getManager();
+        $reservation = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
+        $price = 0;
+
+        foreach ($reservation->getTickets() as $ticket) {
+            $price = $price + $ticket->getRate();
+        }
+        var_dump($price);
+
+        if ($request->isMethod('POST')){
+            \Stripe\Stripe::setApiKey("sk_test_RGoO7ycfZELVst0lBoTE4UhK");
+            $token = $_POST['stripeToken'];
+            $charge = \Stripe\Charge::create(array(
+            "amount" => $price,
+            "currency" => "eur",
+            "description" => "Example charge",
+            "source" => $request->request->get('stripeToken'),
+            ));
+
+            $message = \Swift_Message::newInstance()
+                ->setSubject('Hello Email')
+                ->setFrom('fernandes91seb@gmail.com')
+                ->setTo('fernandes91seb@gmail.com')
+                ->setBody('coucou');
+                
+            $this->get('mailer')->send($message);
+        }
+        
+
+        return $this->render('PROJETPlatformBundle:Billing:bill.html.twig');
     }
 }

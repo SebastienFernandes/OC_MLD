@@ -16,5 +16,9 @@
 		<a href="{{ path('projet_platform_del', { 'id': reservation.id }) }}" class="btn btn-danger">
             Supprimer
         </a>
+        {% set priceUp = price / 100 %}
+		<a href="{{ path('projet_platform_billing', { 'id': reservation.id }) }}" class="btn btn-danger">
+            Valider {{ priceUp }}
+        </a>
 	</body>
 </html>

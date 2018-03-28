@@ -21,3 +21,10 @@ projet_platform_del:
         id:        1
     requirements:
         id: \d+
+
+projet_platform_billing:
+    path:      /bill/{id}
+    defaults:
+        _controller: PROJETPlatformBundle:Ticket:billing
+    requirements:
+        id: \d+
