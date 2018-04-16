@@ -7,21 +7,24 @@
     <title>{% block title %}Musée Du Louvre{% endblock %}</title>
 
     {% block stylesheets %}
-      {# On charge le CSS de bootstrap depuis le site directement #}
-      <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+      {% stylesheets 'bundles/projetcore/css/style.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+      {% endstylesheets  %}
     {% endblock %}
+    
   </head>
 
-  <body>
-  <div class="container">
-    <div id="header" class="jumbotron">
-      <h2>Projet de billetterie pour le "musée du louvre"</h2>
-      <p>
-        Ce projet est sera réalisé dans son intégralité avec Symfony</p>
-      <p>
-    </div>
+  <body id="body">
+  
+    <div id="content">
+      <div>
+        <h1>MUSEE DU LOUVRE</h1>
+      </div>
+      {% block body %}
+      {% endblock %}
+    </div>    
 
-    {# On affiche tous les messages flash dont le nom est « info » #}
     {% for message in app.session.flashbag.get('info') %}
       <div class="alert alert-info">Message flash : {{ message }}</div>
     {% endfor %}
@@ -29,7 +32,6 @@
     <footer>
       <p>Développé et edité par Sébastien</p>
     </footer>
-  </div>
-
+  
   </body>
 </html>

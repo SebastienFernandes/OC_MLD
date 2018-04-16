@@ -13,6 +13,7 @@ projet_platform_add:
         fn:        1
     requirements:
         fn: \d+
+    methods:    [post, get]
 
 projet_platform_del:
     path:      /del/{id}

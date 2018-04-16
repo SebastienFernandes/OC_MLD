@@ -27,9 +27,14 @@ class Count
         } else {
             $count1   = $countTicket[0]->getNumbers();
             $newCount = $count1 + $count;
-            $countTicket[0]->setNumbers($newCount);
+            if($newCount > 20){
+                return null;
+            }else{
+                $countTicket[0]->setNumbers($newCount);
+                return $countTicket[0];
+            }
 
-            return $countTicket[0];
+            
         }
     }
 

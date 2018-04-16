@@ -5,6 +5,7 @@ namespace PROJET\PlatformBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use PROJET\PlatformBundle\Entity\Ticket;
 use PROJET\PlatformBundle\Entity\Reservation;
 use PROJET\PlatformBundle\Entity\TicketCount;
@@ -35,16 +36,30 @@ class TicketController extends Controller
 
     public function addAction(Request $request)
     {
+//----------------------------------------------------------------------------------------------------------------------
+        $day              = new \DateTime();
+        $day->setTime(00, 00, 00);
+        $em               = $this->getDoctrine()->getManager();
+        $reservDate       = $em->getRepository('PROJETPlatformBundle:TicketCount')->findOneBy(['day' => $day]);
+        if ($reservDate === null){
+            $ticketCountToDay = 0;
+        }else{
+            $ticketCountToDay = $reservDate->getNumbers();
+        }
+//----------------------------------------------------------------------------------------------------------------------
         $reservation = new Reservation();
         $form        = $this->get('form.factory')->create(ReservationType::class, $reservation);
 
-        if ($request->isMethod('POST'))
+        if ($request->isMethod('POST') && !$request->isXmlHttpRequest())
         {
             $form->handleRequest($request);
             $price         = $this->container->get('projet_platform.price');
             $ticketCounter = $this->container->get('projet_platform.count');
             $em            = $this->getDoctrine()->getManager();
-            $tc            = $ticketCounter->addTicketCounter($em, $reservation);            
+            $tc            = $ticketCounter->addTicketCounter($em, $reservation);
+            if (null === $tc){
+                return $this->redirectToRoute('projet_core_homepage');
+            }           
 
             foreach ($reservation->getTickets() as $ticket) {
                 $ddn      = $ticket->getBirthDate();
@@ -65,9 +80,28 @@ class TicketController extends Controller
             return $this->redirectToRoute('projet_platform_home', array('id' => $reservation->getId()));
         }
         
+        if ($request->isXmlHttpRequest())
+        {
+            $m = $request->request->get('month');
+            $d = $request->request->get('day');
+            $y = $request->request->get('year');
+            $day         = new \DateTime($y .'/'. $m .'/'. $d);
+            $em          = $this->getDoctrine()->getManager();
+            $reservDate  = $em->getRepository('PROJETPlatformBundle:TicketCount')->findOneBy(['day' => $day]);
+
+            if ($reservDate === null){
+                $ticketCount = 0;
+            }else{
+                $ticketCount = $reservDate->getNumbers();
+            }
+
+            return new JsonResponse($ticketCount);
+        }
+        
 
         return $this->render('PROJETPlatformBundle:Reservation:add.html.twig', array(
           'form' => $form->createView(),
+          'ticketCountToDay' => $ticketCountToDay
         ));
     }
 
@@ -119,9 +153,21 @@ class TicketController extends Controller
                 ->setSubject('Hello Email')
                 ->setFrom('fernandes91seb@gmail.com')
                 ->setTo('fernandes91seb@gmail.com')
-                ->setBody('coucou');
-                
+                ->setBody(
+                    $this->renderView(
+                        'Emails/email.html.twig',
+                        array('reservation' => $reservation)
+                    )
+                )
+                ->attach(
+                    \Swift_Attachment::fromPath('https://upload.wikimedia.org/wikipedia/commons/a/a2/EAN-13-5901234123457.svg')
+                        ->setDisposition('inline')
+                );
+
             $this->get('mailer')->send($message);
+            return $this->render('Emails/email.html.twig', array(
+                'reservation' => $reservation
+            ));
         }
         
 

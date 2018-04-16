@@ -1,0 +1,28 @@
+
+<ul>
+  {% for ticket in reservation.Tickets %}
+    <li style="list-style-type: none; background-color:#DCDCDC">
+      <h2>
+        {{ ticket.lastName }} {{ ticket.firstName }}
+      </h2>
+      <div>
+        date de naissance : {{ ticket.birthDate|date("d/m/Y") }}
+      </div>
+      <div>
+        Réside en {{ ticket.country }}
+      </div>
+      <hr>
+      {% if ticket.type == true %}
+      	<p style="font-weight:bold">Ticket demi-journée</p>
+      {% else %}
+      	<p style="font-weight:bold">Ticket journée complète</p>
+      {% endif %}
+	  {% if ticket.reducedPrice == true %}
+	  	<p style="font-weight:bold">Réduction de tarif</p>
+      {% endif %}
+      {% set priceUp = ticket.rate / 100 %}
+      <p style="font-weight:bold">prix d'entrée : {{ priceUp }}</p>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/EAN-13-5901234123457.svg" alt="wikimedia.org"></img>
+    </li>
+  {% endfor %}
+</ul>
