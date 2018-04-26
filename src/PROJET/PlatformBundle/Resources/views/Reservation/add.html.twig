@@ -19,7 +19,7 @@
 		{{ form_start(form) }}
 			{{ form_row(form.date) }}
 			{{ form_row(form.email) }}
-			<h3>Tickets</h3>
+			<h3>Billets</h3>
 		    <ul class="tickets" data-prototype="{{ form_widget(form.tickets.vars.prototype)|e('html_attr') }}">
 		    </ul>
 		{{ form_end(form) }}
@@ -28,8 +28,8 @@
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript">
-		var $addTicketLink = $('<a href="#" class="add_ticket_link">Add a ticket</a>');
-		var $newLinkLi     = $('<li></li>').append($addTicketLink);
+		var $addTicketLink = $('<a href="#" class="btn btn-primary">Ajouter un Billet</a>');
+		var $newLinkLi     = $('<li class="addTicket"></li>').append($addTicketLink);
 
 		jQuery(document).ready(function() {
 			var $collectionHolder = $('ul.tickets');
@@ -52,7 +52,7 @@
 		    $collectionHolder.data('index', index + 1);
 
 		    var $newFormLi = $('<li class="formLi"></li>').append(newForm);
-		    $newFormLi.append('<a href="#" class="remove-ticket">remove ticket</a>')
+		    $newFormLi.append('<a href="#" class="remove-ticket btn btn-danger">Supprimer le Billet</a>')
 		    $newLinkLi.before($newFormLi);
 
 		    $('.remove-ticket').click(function(e) {

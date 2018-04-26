@@ -1,15 +1,35 @@
 #body
 {
-	background-image: url(https://www.sortiraparis.com/images/2/18029/255462-les-jeunes-ont-la-parole-la-nocturne-au-musee-du-louvre.jpg);
+	background-color: #A5B9C8;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+#footer
+{
+    display: none;
+}
+
+#content
+{
+	margin-top: 100px;
+	margin-left: 100px;
+}
+
+#titre
+{
+	font-size: 3em;
+	font-weight: bold;
+	text-shadow: 5px 5px 5px #AF6A1B;
 }
 
 #corp
 {
 	background-color: white;
 	padding: 10px;
-	margin: 10px;
+	margin-right: 100px;
+	border: 2px #AF6A1B solid;
+	border-radius: 10px;
 }
 
 .formLi
@@ -17,5 +37,68 @@
 	background-color: #EBEBEB;
 	list-style: none;
 	padding: 10px;
+	margin-bottom: 10px;
+	margin-right: 50px;
+	border: 2px #DADADA solid;
+	border-radius: 10px;
+}
+
+.ticketLi
+{
+	background-color: #EBEBEB;
+	list-style: none;
+	padding: 10px;
 	margin: 10px;
+}
+
+/*-------------génération de billets-------------*/
+
+#bill
+{
+	background-color: #EBEBEB;
+	list-style: none;
+	padding: 10px;
+	margin: 10px;
+}
+
+#projet_platformbundle_reservation_date
+{
+	display: inline-block;
+	margin-top: 15px;
+	margin-bottom: 10px;
+	margin-left: 20px;
+}
+
+#projet_platformbundle_reservation_email
+{
+
+	margin-left: 113px;
+}
+
+.addTicket
+{	
+	list-style: none;
+}
+
+/*-------------billets-------------*/
+
+.lastName
+{	
+	margin-left: 10px;
+}
+
+.firstName
+{
+	margin-left: 58px;
+}
+
+.country
+{
+	margin-left: 77px;
+}
+
+.birthDate
+{
+	margin-left: 25px;
+	display: inline-block;
 }

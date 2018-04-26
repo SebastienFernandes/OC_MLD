@@ -19,7 +19,7 @@
   
     <div id="content">
       <div>
-        <h1>MUSEE DU LOUVRE</h1>
+        <h1 id="titre">MUSEE DU LOUVRE</h1>
       </div>
       {% block body %}
       {% endblock %}
@@ -29,7 +29,7 @@
       <div class="alert alert-info">Message flash : {{ message }}</div>
     {% endfor %}
 
-    <footer>
+    <footer id="footer" class="navbar navbar-fixed-bottom">
       <p>Développé et edité par Sébastien</p>
     </footer>
   

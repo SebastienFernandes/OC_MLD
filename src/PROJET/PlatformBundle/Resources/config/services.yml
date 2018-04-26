@@ -4,6 +4,12 @@ services:
 
     projet_platform.count:
         class: PROJET\PlatformBundle\Count\Count
-#    projet_platform.example:
-#        class: PROJET\PlatformBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+    projet_platform.check:
+        class: PROJET\PlatformBundle\Count\Check
+
+    projet_platform.submitForm:
+        class: PROJET\PlatformBundle\SubmitForm\SubmitForm
+        arguments:
+          - "@projet_platform.price"
+          - "@projet_platform.count"

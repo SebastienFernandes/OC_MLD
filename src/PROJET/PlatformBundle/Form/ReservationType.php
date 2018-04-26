@@ -19,16 +19,20 @@ class ReservationType extends AbstractType
     {
         $builder
             ->add('date',        DateType::class, array(
+                'label'  =>'Date de réservation',
                 'widget' => 'choice',
                 'years'  => range(date('Y')+1, date('Y'))))
             ->add('email',       TextType::class)
             ->add('tickets',     collectionType::class, array(
+                'label'         => false,
                 'entry_type'    => TicketType::class,
                 'entry_options' => array('label' => false),
                 'allow_add'     => true,
                 'by_reference'  => false,
             ))
-            ->add('save',        SubmitType::class);
+            ->add('save',        SubmitType::class, array(
+                'attr' => array('class' => 'btn btn-warning'),
+                'label' => 'Valider'));
     }/**
      * {@inheritdoc}
      */

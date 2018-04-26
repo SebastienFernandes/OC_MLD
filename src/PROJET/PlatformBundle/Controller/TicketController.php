@@ -19,85 +19,39 @@ class TicketController extends Controller
     	$em          = $this->getDoctrine()->getManager();
         $reservation = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
     	$apiEmail    = $reservation->getEmail();
-        var_dump($apiEmail);
         $price = 0;
 
         foreach ($reservation->getTickets() as $ticket) {
-            var_dump($ticket);
             $price = $price + $ticket->getRate();
         }
-        var_dump($price);
 
         return $this->render('PROJETPlatformBundle:Reservation:index.html.twig', array(
             'reservation' => $reservation,
-            'price' => $price
+            'price' => $price,
+            'tickets' => $reservation->getTickets()
         ));
     }
 
     public function addAction(Request $request)
     {
-//----------------------------------------------------------------------------------------------------------------------
-        $day              = new \DateTime();
-        $day->setTime(00, 00, 00);
-        $em               = $this->getDoctrine()->getManager();
-        $reservDate       = $em->getRepository('PROJETPlatformBundle:TicketCount')->findOneBy(['day' => $day]);
-        if ($reservDate === null){
-            $ticketCountToDay = 0;
-        }else{
-            $ticketCountToDay = $reservDate->getNumbers();
-        }
-//----------------------------------------------------------------------------------------------------------------------
+        $em          = $this->getDoctrine()->getManager();
         $reservation = new Reservation();
         $form        = $this->get('form.factory')->create(ReservationType::class, $reservation);
 
-        if ($request->isMethod('POST') && !$request->isXmlHttpRequest())
-        {
-            $form->handleRequest($request);
-            $price         = $this->container->get('projet_platform.price');
-            $ticketCounter = $this->container->get('projet_platform.count');
-            $em            = $this->getDoctrine()->getManager();
-            $tc            = $ticketCounter->addTicketCounter($em, $reservation);
-            if (null === $tc){
-                return $this->redirectToRoute('projet_core_homepage');
-            }           
+        $serviceCheck     = $this->container->get('projet_platform.check');
+        $ticketCountToDay = $serviceCheck->checkTicketCountToDay($em);
 
-            foreach ($reservation->getTickets() as $ticket) {
-                $ddn      = $ticket->getBirthDate();
-                $reduced  = $ticket->getReducedPrice();
-                $dayType  = $ticket->getType();
-                $age      = $price->calculateAge($ddn);
-                $rateType = $price->calculateRateType($age, $reduced);
-                $rate     = $price->calculateRate($rateType, $dayType);
-                $ticket->setRateType($rateType);
-                $ticket->setRate($rate);
-                $em->persist($ticket);
-            }
-
-            $em->persist($tc);
-            $em->persist($reservation);
-            $em->flush();
-
+        if ($request->isMethod('POST') && !$request->isXmlHttpRequest()) {
+            $serviceSubmitForm = $this->container->get('projet_platform.submitForm');
+            $submitForm        = $serviceSubmitForm->submit($request, $em, $reservation, $form);
             return $this->redirectToRoute('projet_platform_home', array('id' => $reservation->getId()));
         }
-        
+
         if ($request->isXmlHttpRequest())
-        {
-            $m = $request->request->get('month');
-            $d = $request->request->get('day');
-            $y = $request->request->get('year');
-            $day         = new \DateTime($y .'/'. $m .'/'. $d);
-            $em          = $this->getDoctrine()->getManager();
-            $reservDate  = $em->getRepository('PROJETPlatformBundle:TicketCount')->findOneBy(['day' => $day]);
-
-            if ($reservDate === null){
-                $ticketCount = 0;
-            }else{
-                $ticketCount = $reservDate->getNumbers();
-            }
-
+        {            
+            $ticketCount = $serviceCheck->checkTicketCount($request, $em);
             return new JsonResponse($ticketCount);
-        }
-        
+        }        
 
         return $this->render('PROJETPlatformBundle:Reservation:add.html.twig', array(
           'form' => $form->createView(),
@@ -137,7 +91,6 @@ class TicketController extends Controller
         foreach ($reservation->getTickets() as $ticket) {
             $price = $price + $ticket->getRate();
         }
-        var_dump($price);
 
         if ($request->isMethod('POST')){
             \Stripe\Stripe::setApiKey("sk_test_RGoO7ycfZELVst0lBoTE4UhK");
