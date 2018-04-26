@@ -2,9 +2,9 @@
 
 {% block stylesheets %}
     {% stylesheets 'bundles/projetplatform/css/style.css' %}
-	    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
-	    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-	{% endstylesheets  %}
+        <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    {% endstylesheets  %}
 {% endblock %}
 
 {% block title %}
@@ -12,93 +12,90 @@
 {% endblock %}
 
 {% block body %}
-	<h3>Formulaire de réservation!</h3>
-	<p id="places">places: {{ ticketCountToDay }} / 20</p>
+    <h3>Formulaire de réservation!</h3>
+    <p id="places">places: {{ ticketCountToDay }} / 20</p>
 
-	<div id="corp">
-		{{ form_start(form) }}
-			{{ form_row(form.date) }}
-			{{ form_row(form.email) }}
-			<h3>Billets</h3>
-		    <ul class="tickets" data-prototype="{{ form_widget(form.tickets.vars.prototype)|e('html_attr') }}">
-		    </ul>
-		{{ form_end(form) }}
-	</div>
+    <div id="corp">
+        {{ form_start(form) }}
+            {{ form_row(form.date) }}
+            {{ form_row(form.email) }}
+            <h3>Billets</h3>
+            <ul class="tickets" data-prototype="{{ form_widget(form.tickets.vars.prototype)|e('html_attr') }}">
+            </ul>
+        {{ form_end(form) }}
+    </div>
 
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script type="text/javascript">
-		var $addTicketLink = $('<a href="#" class="btn btn-primary">Ajouter un Billet</a>');
-		var $newLinkLi     = $('<li class="addTicket"></li>').append($addTicketLink);
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        var $addTicketLink = $('<a href="#" class="btn btn-primary">Ajouter un Billet</a>');
+        var $newLinkLi     = $('<li class="addTicket"></li>').append($addTicketLink);
 
-		jQuery(document).ready(function() {
-			var $collectionHolder = $('ul.tickets');
-			$collectionHolder.append($newLinkLi);
-			$collectionHolder.data('index', $collectionHolder.find(':input').length);
+        jQuery(document).ready(function() {
+            var $collectionHolder = $('ul.tickets');
+            $collectionHolder.append($newLinkLi);
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
 
-			$addTicketLink.on('click', function(e) {
-				e.preventDefault();
-				addTicketForm($collectionHolder, $newLinkLi);
-			});
-		});
+            $addTicketLink.on('click', function(e) {
+                e.preventDefault();
+                addTicketForm($collectionHolder, $newLinkLi);
+            });
+        });
 
-		function addTicketForm($collectionHolder, $newLinkLi) {
-		    var prototype = $collectionHolder.data('prototype');
-		    var index     = $collectionHolder.data('index');
-			var newForm   = prototype;
+        function addTicketForm($collectionHolder, $newLinkLi) {
+            var prototype = $collectionHolder.data('prototype');
+            var index     = $collectionHolder.data('index');
+            var newForm   = prototype;
 
-		    newForm = newForm.replace(/__name__/g, index);
+            newForm = newForm.replace(/__name__/g, index);
 
-		    $collectionHolder.data('index', index + 1);
+            $collectionHolder.data('index', index + 1);
 
-		    var $newFormLi = $('<li class="formLi"></li>').append(newForm);
-		    $newFormLi.append('<a href="#" class="remove-ticket btn btn-danger">Supprimer le Billet</a>')
-		    $newLinkLi.before($newFormLi);
+            var $newFormLi = $('<li class="formLi"></li>').append(newForm);
+            $newFormLi.append('<a href="#" class="remove-ticket btn btn-danger">Supprimer le Billet</a>')
+            $newLinkLi.before($newFormLi);
 
-		    $('.remove-ticket').click(function(e) {
-		        e.preventDefault();
-		        
-		        $(this).parent().remove();
-		        
-		        return false;
-		    });
-		};
+            $('.remove-ticket').click(function(e) {
+                e.preventDefault();
+                $(this).parent().remove();
+                return false;
+            });
+        };
 
-		$('#projet_platformbundle_reservation_date_month').change(function(){
-			jsonDate();
-		});
+        $('#projet_platformbundle_reservation_date_month').change(function(){
+            jsonDate();
+        });
 
-		$('#projet_platformbundle_reservation_date_day').change(function(){
-			jsonDate();
-		});
+        $('#projet_platformbundle_reservation_date_day').change(function(){
+            jsonDate();
+        });
 
-		$('#projet_platformbundle_reservation_date_year').change(function(){
-			jsonDate();
-		});
+        $('#projet_platformbundle_reservation_date_year').change(function(){
+            jsonDate();
+        });
 
-		function jsonDate() {
-			var e1 = document.getElementById("projet_platformbundle_reservation_date_month");
-			var e2 = document.getElementById("projet_platformbundle_reservation_date_day");
-			var e3 = document.getElementById("projet_platformbundle_reservation_date_year");
-			var date_month = e1.options[e1.selectedIndex].value;
-			var date_day   = e2.options[e2.selectedIndex].value;
-			var date_year  = e3.options[e3.selectedIndex].value;
+        function jsonDate() {
+            var e1 = document.getElementById("projet_platformbundle_reservation_date_month");
+            var e2 = document.getElementById("projet_platformbundle_reservation_date_day");
+            var e3 = document.getElementById("projet_platformbundle_reservation_date_year");
+            var date_month = e1.options[e1.selectedIndex].value;
+            var date_day   = e2.options[e2.selectedIndex].value;
+            var date_year  = e3.options[e3.selectedIndex].value;
 
-			$.ajax({
-				url: "{{ path('projet_platform_add')}}",
-				method: "POST",
-	            dataType: "json",
-				data: {
-					month: date_month,
-					day: date_day,
-					year: date_year },
-				success: function (json) {
-					console.log(json);
-					$('#places').replaceWith('<p id="places">places: ' + json + ' / 20</p>');
-				}
-			});
-		}
-		
+            $.ajax({
+                url: "{{ path('projet_platform_add')}}",
+                method: "POST",
+                dataType: "json",
+                data: {
+                    month: date_month,
+                    day: date_day,
+                    year: date_year },
+                success: function (json) {
+                    console.log(json);
+                    $('#places').replaceWith('<p id="places">places: ' + json + ' / 20</p>');
+                }
+            });
+        }
 
-	</script>
+    </script>
 {% endblock %}

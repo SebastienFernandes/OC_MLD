@@ -16,9 +16,9 @@ class TicketController extends Controller
 {
     public function indexAction($id)
     {
-    	$em          = $this->getDoctrine()->getManager();
+        $em          = $this->getDoctrine()->getManager();
         $reservation = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
-    	$apiEmail    = $reservation->getEmail();
+        $apiEmail    = $reservation->getEmail();
         $price = 0;
 
         foreach ($reservation->getTickets() as $ticket) {

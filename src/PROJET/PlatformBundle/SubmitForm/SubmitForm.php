@@ -7,14 +7,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class SubmitForm
 {
-	private $price;
-	private $count;
+    private $price;
+    private $count;
 
-	public function __construct($price, $count)
-	{
-		$this->price = $price;
-		$this->count = $count;
-	}
+    public function __construct($price, $count)
+    {
+        $this->price = $price;
+        $this->count = $count;
+    }
 
     public function submit($request, $em, $reservation, $form) 
     {

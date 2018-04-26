@@ -5,8 +5,8 @@ namespace PROJET\PlatformBundle\Price;
 
 class Price
 {
-	public function calculateAge($BirthDate)
-	{
+    public function calculateAge($BirthDate)
+    {
         $date           = new \Datetime();
         $year           = date_format($date,'Y');
         $month          = date_format($date,'md');
@@ -18,10 +18,10 @@ class Price
         }
 
         return $age;
-	}
+    }
 
-	public function calculateRateType($age, $reduced)
-	{
+    public function calculateRateType($age, $reduced)
+    {
         if ($age < 4){
             $rateType = 'free';
         }elseif (12 <= $age && $reduced == true){
@@ -35,11 +35,11 @@ class Price
         }
 
         return $rateType;
-	}
+    }
 
-	public function calculateRate($rateType, $dayType)
-	{
-		if ($rateType == 'free'){
+    public function calculateRate($rateType, $dayType)
+    {
+        if ($rateType == 'free'){
             $rate = 0;
         }elseif ($rateType == 'reduced'){
             $rate = 1000;      
@@ -56,5 +56,5 @@ class Price
         }
 
         return $rate;
-	}
+    }
 }

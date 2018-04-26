@@ -2,38 +2,37 @@
 
 {% block stylesheets %}
     {% stylesheets 'bundles/projetplatform/css/style.css' %}
-	    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
-	    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-	{% endstylesheets  %}
+        <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    {% endstylesheets  %}
 {% endblock %}
 
 {% block title %}
-  Reservation
+    Reservation
 {% endblock %}
 
 {% block body %}
-	<body>
+    <body>
+        <div>
+            <ul>
+                {% for ticket in tickets %}
+                    <li class="ticketLi">
+                    {{ ticket.lastName }} {{ ticket.firstName }} </br>
+                    {{ ticket.country }} </br>
+                    {{ ticket.rateType }} </br>
+                    {{ ticket.rate }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
 
-		<div>
-	        <ul>
-	        	{% for ticket in tickets %}
-	            	<li class="ticketLi">
-	            	{{ ticket.lastName }} {{ ticket.firstName }} </br>
-	            	{{ ticket.country }} </br>
-	            	{{ ticket.rateType }} </br>
-	            	{{ ticket.rate }}
-	            	</li>
-	        	{% endfor %}
-	        </ul>
-	    </div>
-
-		<h1>Réservation</h1>
-		<a href="{{ path('projet_platform_del', { 'id': reservation.id }) }}" class="btn btn-danger">
+        <h1>Réservation</h1>
+        <a href="{{ path('projet_platform_del', { 'id': reservation.id }) }}" class="btn btn-danger">
             Supprimer
         </a>
         {% set priceUp = price / 100 %}
-		<a href="{{ path('projet_platform_billing', { 'id': reservation.id }) }}" class="btn btn-danger">
+        <a href="{{ path('projet_platform_billing', { 'id': reservation.id }) }}" class="btn btn-danger">
             Valider {{ priceUp }}
         </a>
-	</body>
+    </body>
 {% endblock %}
