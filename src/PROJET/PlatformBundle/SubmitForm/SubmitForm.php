@@ -3,6 +3,8 @@
 namespace PROJET\PlatformBundle\SubmitForm;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use PROJET\PlatformBundle\Price\Price;
+use PROJET\PlatformBundle\Count\Count;
 
 
 class SubmitForm
@@ -10,7 +12,7 @@ class SubmitForm
     private $price;
     private $count;
 
-    public function __construct($price, $count)
+    public function __construct(Price $price, Count $count)
     {
         $this->price = $price;
         $this->count = $count;

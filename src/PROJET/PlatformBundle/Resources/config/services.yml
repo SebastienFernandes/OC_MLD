@@ -1,15 +1,15 @@
 services:
-    projet_platform.price:
-        class: PROJET\PlatformBundle\Price\Price
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
 
-    projet_platform.count:
-        class: PROJET\PlatformBundle\Count\Count
+    PROJET\PlatformBundle\:
+        resource: '../../*'
+        exclude:  '../../{Entity,Tests,Repository}'
 
-    projet_platform.check:
-        class: PROJET\PlatformBundle\Count\Check
+    PROJET\PlatformBundle\Count\Check:
+        public: true
 
-    projet_platform.submitForm:
-        class: PROJET\PlatformBundle\SubmitForm\SubmitForm
-        arguments:
-          - "@projet_platform.price"
-          - "@projet_platform.count"
+    PROJET\PlatformBundle\SubmitForm\SubmitForm:
+        public: true

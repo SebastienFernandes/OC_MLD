@@ -11,6 +11,8 @@ use PROJET\PlatformBundle\Entity\Reservation;
 use PROJET\PlatformBundle\Entity\TicketCount;
 use PROJET\PlatformBundle\Form\TicketType;
 use PROJET\PlatformBundle\Form\ReservationType;
+use PROJET\PlatformBundle\Count\Check;
+use PROJET\PlatformBundle\SubmitForm\SubmitForm;
 
 class TicketController extends Controller
 {
@@ -38,11 +40,11 @@ class TicketController extends Controller
         $reservation = new Reservation();
         $form        = $this->get('form.factory')->create(ReservationType::class, $reservation);
 
-        $serviceCheck     = $this->container->get('projet_platform.check');
+        $serviceCheck     = $this->get(Check::class);
         $ticketCountToDay = $serviceCheck->checkTicketCountToDay($em);
 
         if ($request->isMethod('POST') && !$request->isXmlHttpRequest()) {
-            $serviceSubmitForm = $this->container->get('projet_platform.submitForm');
+            $serviceSubmitForm = $this->get(SubmitForm::class);
             $submitForm        = $serviceSubmitForm->submit($request, $em, $reservation, $form);
             return $this->redirectToRoute('projet_platform_home', array('id' => $reservation->getId()));
         }
