@@ -21,7 +21,7 @@ class SubmitForm
     public function submit($request, $em, $reservation, $form) 
     {
         $form->handleRequest($request);
-        $ticketCounter        = $this->count->addTicketCounter($em, $reservation);
+        $ticketCounter = $this->count->addTicketCounter($em, $reservation);
         if (null === $ticketCounter){
             return false;
         }           

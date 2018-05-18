@@ -12,24 +12,23 @@ use PROJET\PlatformBundle\Entity\TicketCount;
 use PROJET\PlatformBundle\Form\TicketType;
 use PROJET\PlatformBundle\Form\ReservationType;
 use PROJET\PlatformBundle\Count\Check;
+use PROJET\PlatformBundle\Count\Count;
 use PROJET\PlatformBundle\SubmitForm\SubmitForm;
+use PROJET\PlatformBundle\Billing\Billing;
 
 class TicketController extends Controller
 {
     public function indexAction($id)
     {
-        $em          = $this->getDoctrine()->getManager();
-        $reservation = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
-        $apiEmail    = $reservation->getEmail();
-        $price = 0;
-
-        foreach ($reservation->getTickets() as $ticket) {
-            $price = $price + $ticket->getRate();
-        }
+        $em             = $this->getDoctrine()->getManager();
+        $reservation    = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
+        $apiEmail       = $reservation->getEmail();
+        $serviceBilling = $this->get(Billing::class);
+        $totalPrice     = $serviceBilling->calculateTotalPrice($reservation);
 
         return $this->render('PROJETPlatformBundle:Reservation:index.html.twig', array(
             'reservation' => $reservation,
-            'price' => $price,
+            'price' => $totalPrice,
             'tickets' => $reservation->getTickets()
         ));
     }
@@ -46,7 +45,12 @@ class TicketController extends Controller
         if ($request->isMethod('POST') && !$request->isXmlHttpRequest()) {
             $serviceSubmitForm = $this->get(SubmitForm::class);
             $submitForm        = $serviceSubmitForm->submit($request, $em, $reservation, $form);
-            return $this->redirectToRoute('projet_platform_home', array('id' => $reservation->getId()));
+            if (true === $submitForm) {
+                return $this->redirectToRoute('projet_platform_home', array('id' => $reservation->getId()));
+            } else {
+                $request->getSession()->getFlashBag()->add('info', 'Il n\'y a plus assé de places pour ce joure.');
+                return $this->redirectToRoute('projet_core_homepage');
+            }
         }
 
         if ($request->isXmlHttpRequest())
@@ -63,19 +67,19 @@ class TicketController extends Controller
 
     public function delAction($id)
     {
-        $em            = $this->getDoctrine()->getManager();
-        $reservation   = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
-        $ticketCounter = $this->container->get('projet_platform.count');
-        $tc            = $ticketCounter->removeTicketCounter($em, $reservation);
+        $em             = $this->getDoctrine()->getManager();
+        $reservation    = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
+        $serviceCounter = $this->get(Count::class);
+        $removeTicket   = $serviceCounter->removeTicketCounter($em, $reservation);
 
         foreach ($reservation->getTickets() as $ticket) {
             $em->remove($ticket);
         }
 
-        if ($tc->getNumbers() <= 0) {
-            $em->remove($tc);
+        if ($removeTicket->getNumbers() <= 0) {
+            $em->remove($removeTicket);
         } else {
-            $em->persist($tc);
+            $em->persist($removeTicket);
         }
         
         $em->remove($reservation);
@@ -86,28 +90,18 @@ class TicketController extends Controller
 
     public function billingAction(Request $request, $id)
     {
-        $em          = $this->getDoctrine()->getManager();
-        $reservation = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
-        $price = 0;
-
-        foreach ($reservation->getTickets() as $ticket) {
-            $price = $price + $ticket->getRate();
-        }
+        $em             = $this->getDoctrine()->getManager();
+        $reservation    = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
+        $serviceBilling = $this->get(Billing::class);
+        $totalPrice     = $serviceBilling->calculateTotalPrice($reservation);
 
         if ($request->isMethod('POST')){
-            \Stripe\Stripe::setApiKey("sk_test_RGoO7ycfZELVst0lBoTE4UhK");
-            $token = $_POST['stripeToken'];
-            $charge = \Stripe\Charge::create(array(
-            "amount" => $price,
-            "currency" => "eur",
-            "description" => "Example charge",
-            "source" => $request->request->get('stripeToken'),
-            ));
+            $billing = $serviceBilling->billingAction($request, $totalPrice);            
 
             $message = \Swift_Message::newInstance()
                 ->setSubject('Hello Email')
                 ->setFrom('fernandes91seb@gmail.com')
-                ->setTo('fernandes91seb@gmail.com')
+                ->setTo($reservation->getEmail())
                 ->setBody(
                     $this->renderView(
                         'Emails/email.html.twig',
@@ -123,8 +117,7 @@ class TicketController extends Controller
             return $this->render('Emails/email.html.twig', array(
                 'reservation' => $reservation
             ));
-        }
-        
+        }        
 
         return $this->render('PROJETPlatformBundle:Billing:bill.html.twig');
     }

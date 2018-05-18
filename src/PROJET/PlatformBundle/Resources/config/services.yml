@@ -11,5 +11,11 @@ services:
     PROJET\PlatformBundle\Count\Check:
         public: true
 
+    PROJET\PlatformBundle\Count\Count:
+        public: true
+
+    PROJET\PlatformBundle\Billing\Billing:
+        public: true
+
     PROJET\PlatformBundle\SubmitForm\SubmitForm:
         public: true
