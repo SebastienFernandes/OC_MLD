@@ -92,7 +92,7 @@
                     year: date_year },
                 success: function (json) {
                     console.log(json);
-                    $('#places').replaceWith('<p id="places">places: ' + json + ' / 20</p>');
+                    $('#places').replaceWith('<p id="places">' + json + '</p>');
                 }
             });
         }

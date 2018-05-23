@@ -22,8 +22,15 @@ class SubmitForm
     {
         $form->handleRequest($request);
         $ticketCounter = $this->count->addTicketCounter($em, $reservation);
-        if (null === $ticketCounter){
-            return false;
+
+        $day = $reservation->getDate();
+        $toDay = (new \DateTime())->modify('-1 day');
+
+        if ($day < $toDay){
+            return 0;
+        }
+        else if (null === $ticketCounter){
+            return 1;
         }           
 
         foreach ($reservation->getTickets() as $ticket) {
@@ -42,7 +49,7 @@ class SubmitForm
         $em->persist($reservation);
         $em->flush();
 
-        return true;        
+        return 2;        
     }
     
 }

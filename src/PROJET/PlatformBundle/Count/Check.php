@@ -25,12 +25,15 @@ class Check
         $d          = $request->request->get('day');
         $y          = $request->request->get('year');
         $day        = new \DateTime($y .'/'. $m .'/'. $d);
+        $toDay      = (new \DateTime())->modify('-1 day');
         $reservDate = $this->reservDate($em, $day);
 
-        if ($reservDate === null){
-            return $ticketCount = 0;
-        }else{
-            return $ticketCount = $reservDate->getNumbers();
+        if ($day < $toDay){
+            return $ticketCount = "<style> #places{color : red; font-weight: bold;}</style>  Attention date non valide! ";
+        }else if ($reservDate === null){
+            return $ticketCount = "places: 0 / 20";
+        }else if ($day > $toDay){
+            return $ticketCount = "places: " .$reservDate->getNumbers(). " / 20";
         }
 
         return new JsonResponse($ticketCount);

@@ -45,10 +45,13 @@ class TicketController extends Controller
         if ($request->isMethod('POST') && !$request->isXmlHttpRequest()) {
             $serviceSubmitForm = $this->get(SubmitForm::class);
             $submitForm        = $serviceSubmitForm->submit($request, $em, $reservation, $form);
-            if (true === $submitForm) {
+            if (2 === $submitForm) {
                 return $this->redirectToRoute('projet_platform_home', array('id' => $reservation->getId()));
-            } else {
-                $request->getSession()->getFlashBag()->add('info', 'Il n\'y a plus assé de places pour ce joure.');
+            } else if (1 === $submitForm){
+                $request->getSession()->getFlashBag()->add('info', 'Il n\'y a plus assé de places pour ce jour.');
+                return $this->redirectToRoute('projet_core_homepage');
+            } else if (0 === $submitForm){
+                $request->getSession()->getFlashBag()->add('info', 'Le date de réservation n\'est pas valide');
                 return $this->redirectToRoute('projet_core_homepage');
             }
         }
