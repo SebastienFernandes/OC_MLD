@@ -4,6 +4,7 @@ namespace PROJET\PlatformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Reservation
@@ -39,6 +40,7 @@ class Reservation
     /**
      * @var \stdClass
      *
+     * @Assert\NotNull()
      * @ORM\ManyToMany(targetEntity="PROJET\PlatformBundle\Entity\Ticket", cascade={"persist"})
      */
     private $tickets;

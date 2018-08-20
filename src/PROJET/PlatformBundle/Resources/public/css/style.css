@@ -1,8 +1,9 @@
+html,body{
+  height:100%;
+}
+
 #body
 {
-    background-color: #A5B9C8;
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 
 #footer
@@ -12,15 +13,12 @@
 
 #content
 {
-    margin-top: 100px;
-    margin-left: 100px;
+    margin-top: 20px;
 }
 
 #titre
 {
-    font-size: 3em;
-    font-weight: bold;
-    text-shadow: 5px 5px 5px #AF6A1B;
+    display: none;
 }
 
 #corp
@@ -63,42 +61,47 @@
 
 #projet_platformbundle_reservation_date
 {
-    display: inline-block;
-    margin-top: 15px;
-    margin-bottom: 10px;
-    margin-left: 20px;
+    display: block;
+    margin: auto;
 }
 
 #projet_platformbundle_reservation_email
 {
-
-    margin-left: 113px;
+    display: block;
+    margin: auto;
+    margin-bottom: 20px;
 }
 
 .addTicket
 {
     list-style: none;
+    display: block;
+    margin-left: -40px;
 }
 
 /*-------------billets-------------*/
 
 .lastName
 {
-    margin-left: 10px;
+    display: block;
+    margin: auto;
 }
 
 .firstName
 {
-    margin-left: 58px;
+    display: block;
+    margin: auto;
 }
 
 .country
 {
-    margin-left: 77px;
+    display: block;
+    margin: auto;
 }
 
 .birthDate
 {
-    margin-left: 25px;
-    display: inline-block;
+    display: block;
+    margin: auto;
+    margin-bottom: 20px;
 }

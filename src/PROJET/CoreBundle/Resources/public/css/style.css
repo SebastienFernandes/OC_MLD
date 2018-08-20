@@ -1,8 +1,13 @@
+html,body{
+  height:100%;
+}
+
 #body
 {
     background-image: url(https://www.sortiraparis.com/images/2/18029/255462-les-jeunes-ont-la-parole-la-nocturne-au-musee-du-louvre.jpg);
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size:cover;
+    background-position: center center; 
 }
 
 #footer
@@ -16,15 +21,19 @@
 
 #content
 {
-    margin-top: 100px;
-    margin-left: 100px;
+    margin-top: 50px;
+}
+
+#blockBody
+{
+    margin-top: 50px;
 }
 
 #titre
 {
     font-size: 3em;
     font-weight: bold;
-    text-shadow: 5px 5px 5px #AF6A1B;
+    text-shadow: -1px 0 #AF6A1B, 1px 0 #AF6A1B, 0 -1px #AF6A1B, 0 1px #AF6A1B;
 }
 
 #reservation

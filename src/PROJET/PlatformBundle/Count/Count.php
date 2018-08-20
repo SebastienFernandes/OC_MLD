@@ -27,7 +27,7 @@ class Count
         } else {
             $count1   = $countTicket[0]->getNumbers();
             $newCount = $count1 + $count;
-            if($newCount > 20){
+            if($newCount > 1000){
                 return null;
             }else{
                 $countTicket[0]->setNumbers($newCount);

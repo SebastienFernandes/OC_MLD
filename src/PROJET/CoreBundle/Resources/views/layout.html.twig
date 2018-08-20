@@ -16,18 +16,23 @@
   </head>
 
   <body id="body">
-  
-    <div id="content">
-      <div>
-        <h1 id="titre">MUSEE DU LOUVRE</h1>
-      </div>
-      {% block body %}
-      {% endblock %}
-    </div>    
+    <div class="container">
+      <div class="row">
+        <div id="content">
+          <div class="col-xs-11 text-center">
+            <h1 id="titre">MUSEE DU LOUVRE</h1>
+          </div>
+          <div id="blockBody" class="col-xs-12 text-center">
+            {% block body %}
+            {% endblock %}
+          </div>
+        </div>    
 
-    {% for message in app.session.flashbag.get('info') %}
-      <div class="alert alert-info">Message flash : {{ message }}</div>
-    {% endfor %}
+        {% for message in app.session.flashbag.get('info') %}
+          <div class="alert alert-info">Message flash : {{ message }}</div>
+        {% endfor %}
+      </div>
+    </div>
 
     <footer id="footer" class="navbar navbar-fixed-bottom">
       <p>Développé et edité par Sébastien</p>
