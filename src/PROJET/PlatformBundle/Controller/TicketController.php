@@ -49,24 +49,30 @@ class TicketController extends Controller
         $serviceCheck     = $this->get(Check::class);
         $ticketCountToDay = $serviceCheck->checkTicketCountToDay($em);
 
-        if ($request->isMethod('POST') && !$request->isXmlHttpRequest()) {
+        if (!$request->isXmlHttpRequest() && $form->isSubmitted() && $form->isValid()) {
             $serviceSubmitForm = $this->get(SubmitForm::class);
             $submitForm        = $serviceSubmitForm->submit($request, $em, $reservation, $form);
 
-            if (2 === $submitForm) {
-                return $this->redirectToRoute('projet_platform_home', array('id' => $reservation->getId()));
-            } else if (1 === $submitForm){
-                $request->getSession()->getFlashBag()->add('info', 'Il n\'y a plus assé de places pour ce jour.');
-                return $this->redirectToRoute('projet_platform_add');
-            } else if (0 === $submitForm){
-                $request->getSession()->getFlashBag()->add('info', 'Le date de réservation n\'est pas valide');
-                return $this->redirectToRoute('projet_platform_add');
-            } else if (3 === $submitForm){
-                $request->getSession()->getFlashBag()->add('info', 'Fermeture du musée les mardis, les 1er mai, 1er novembre et 25 décembre');
-                return $this->redirectToRoute('projet_platform_add');
-            } else if (4 === $submitForm){
-                $request->getSession()->getFlashBag()->add('info', 'Pas de réservation sur l\'application les dimanches et jours fériés');
-                return $this->redirectToRoute('projet_platform_add');
+            switch ($submitForm) {
+                case 0:
+                    $request->getSession()->getFlashBag()->add('info', 'Le date de réservation n\'est pas valide');
+                    return $this->redirectToRoute('projet_platform_add');
+                    break;
+                case 1:
+                    $request->getSession()->getFlashBag()->add('info', 'Il n\'y a plus assé de places pour ce jour.');
+                    return $this->redirectToRoute('projet_platform_add');
+                    break;
+                case 2:
+                    return $this->redirectToRoute('projet_platform_home', array('id' => $reservation->getId()));
+                    break;
+                case 3:
+                    $request->getSession()->getFlashBag()->add('info', 'Fermeture du musée les mardis, les 1er mai, 1er novembre et 25 décembre');
+                    return $this->redirectToRoute('projet_platform_add');
+                    break;
+                case 4:
+                    $request->getSession()->getFlashBag()->add('info', 'Pas de réservation sur l\'application les dimanches et jours fériés');
+                    return $this->redirectToRoute('projet_platform_add');
+                    break;
             }
         }
 

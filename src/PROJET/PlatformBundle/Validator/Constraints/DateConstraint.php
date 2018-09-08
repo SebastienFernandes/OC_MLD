@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * @Annotation
  */
-class ConstraintDate extends Constraint
+class DateConstraint extends Constraint
 {
     public $message = 'The string "{{ string }}" contains an illegal character: it can only contain letters or numbers.';
 }
