@@ -22,9 +22,6 @@ class ReservationType extends AbstractType
                 'label'  =>'Date de réservation',
                 'widget' => 'choice',
                 'years'  => range(date('Y')+1, date('Y'))
-                //'widget' => 'single_text',
-                //'html5' => false,
-                //'attr' => ['class' => 'datepicker'],
             ))
             ->add('email',       TextType::class)
             ->add('tickets',     collectionType::class, array(

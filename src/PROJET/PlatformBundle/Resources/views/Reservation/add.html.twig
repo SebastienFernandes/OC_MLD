@@ -56,7 +56,6 @@
                 e.preventDefault();
                 addTicketForm($collectionHolder, $newLinkLi);
                 toggleValidation();
-                jsonDate();
             });
         });
 
@@ -82,7 +81,7 @@
         };
 
         submit.onclick=function() {
-            toggleValidation();
+            //toggleValidation();
         }
 
         function toggleValidation() {
@@ -115,19 +114,6 @@
             var date_month  = e1.options[e1.selectedIndex].value;
             var date_day    = e2.options[e2.selectedIndex].value;
             var date_year   = e3.options[e3.selectedIndex].value;
-            var today       = new Date();
-
-            var demiJournee = document.getElementsByClassName("typeTicket");
-            console.log(demiJournee);
-            demiJournee.setAttribute('disabled', true);
-
-            if(date_year == today.getFullYear()){
-                if(date_month == today.getMonth()+1){
-                    if(date_day == today.getDate()){
-                        console.log('YEP');
-                    }                    
-                }
-            }
 
             $.ajax({
                 url: "{{ path('projet_platform_add')}}",
@@ -138,7 +124,6 @@
                     day: date_day,
                     year: date_year },
                 success: function (json) {
-                    console.log(json);
                     $('#places').replaceWith('<p id="places">' + json + '</p>');
                 }
             });

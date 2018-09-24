@@ -5,6 +5,7 @@ namespace PROJET\PlatformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use PROJET\PlatformBundle\Validator\Constraints as ReservationAssert;
 
 /**
  * Reservation
@@ -26,6 +27,11 @@ class Reservation
     /**
      * @var \DateTime
      *
+     * @Assert\GreaterThan("yesterday")
+     *
+     * @ReservationAssert\ReservationViolationDay
+     * @ReservationAssert\ReservationExeptDate
+     *
      * @ORM\Column(name="date", type="datetime")
      */
     private $date;
@@ -33,12 +39,23 @@ class Reservation
     /**
      * @var string
      *
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     checkMX = true
+     * )
+     *
      * @ORM\Column(name="email", type="string", length=255)
      */
     private $email;
 
     /**
      * @var \stdClass
+     *
+     * @Assert\Collection(
+     *      fields = {
+     *          @Assert\NotBlank()
+     *      }
+     * )
      *
      * @Assert\NotNull()
      * @ORM\ManyToMany(targetEntity="PROJET\PlatformBundle\Entity\Ticket", cascade={"persist"})
