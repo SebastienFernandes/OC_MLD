@@ -62,6 +62,13 @@ class Reservation
      */
     private $tickets;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="type", type="boolean")
+     */
+    private $type = true;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -160,5 +167,28 @@ class Reservation
     {
         // ...
     }
-}
 
+    /**
+     * Set type
+     *
+     * @param boolean $type
+     *
+     * @return Reservation
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return boolean
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+}

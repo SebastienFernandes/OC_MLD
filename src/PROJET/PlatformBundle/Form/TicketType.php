@@ -10,8 +10,6 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 
 class TicketType extends AbstractType
 {
@@ -40,24 +38,7 @@ class TicketType extends AbstractType
                 'label' => 'Billet tarif réduit  ->',
                 'required' => false));
 
-        $builder
-            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event){
-                $form = $event->getForm();
-                $day = new \DateTime();
-                if ($day->format('G') >= "14"){
-                    $form->add('type', CheckboxType::class, array(
-                    'attr' => array('class' => 'typeTicket'),
-                    'label' => 'Billet demi-journée  ->',
-                    'disabled' => true,
-                    'data' => true,
-                    'required' => false));
-                }else{
-                    $form->add('type', CheckboxType::class, array(
-                    'attr' => array('class' => 'typeTicket'),
-                    'label' => 'Billet demi-journée  ->',
-                    'required' => false));
-                }
-            });
+        
     }
 
     /**

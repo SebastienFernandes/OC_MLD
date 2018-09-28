@@ -26,10 +26,11 @@ class SubmitForm
             return 1;
         }
 
+        $dayType = $reservation->getType();
+
         foreach ($reservation->getTickets() as $ticket) {
             $BirthDate = $ticket->getBirthDate();
             $reduced   = $ticket->getReducedPrice();
-            $dayType   = $ticket->getType();
             $age       = $this->price->calculateAge($BirthDate);
             $rateType  = $this->price->calculateRateType($age, $reduced);
             $rate      = $this->price->calculateRate($rateType, $dayType);

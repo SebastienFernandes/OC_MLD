@@ -94,4 +94,3 @@ class TicketCount
         return $this->numbers;
     }
 }
-

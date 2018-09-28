@@ -52,13 +52,6 @@ class Ticket
     /**
      * @var bool
      *
-     * @ORM\Column(name="type", type="boolean")
-     */
-    private $type = true;
-
-    /**
-     * @var bool
-     *
      * @ORM\Column(name="reducedPrice", type="boolean")
      */
     private $reducedPrice = true;
@@ -182,30 +175,6 @@ class Ticket
     public function getBirthDate()
     {
         return $this->birthDate;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     *
-     * @return Ticket
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return bool
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**

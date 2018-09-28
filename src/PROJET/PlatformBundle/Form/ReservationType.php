@@ -8,7 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+
 
 class ReservationType extends AbstractType
 {
@@ -24,6 +28,11 @@ class ReservationType extends AbstractType
                 'years'  => range(date('Y')+1, date('Y'))
             ))
             ->add('email',       TextType::class)
+            ->add('type',        CheckboxType::class, array(
+                'attr'     => array('class' => 'typeTicket'),
+                'label'    => 'Billet demi-journée  ->',
+                'required' => false,
+            ))
             ->add('tickets',     collectionType::class, array(
                 'label'         => false,
                 'entry_type'    => TicketType::class,
@@ -34,7 +43,29 @@ class ReservationType extends AbstractType
             ->add('save',        SubmitType::class, array(
                 'attr'     => array('class' => 'btn btn-warning'),
                 'label'    => 'Valider'));
-    }/**
+
+        /*$builder
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event){
+                $form = $event->getForm();
+                $day = $form->getData()->getDate() || new \DateTime();
+                if ($day->format('G') >= "14"){
+                    $form->add('type', CheckboxType::class, array(
+                    'attr' => array('class' => 'typeTicket'),
+                    'label' => 'Billet demi-journée  ->',
+                    'disabled' => true,
+                    'data' => true,
+                    'required' => false));
+                }else{
+                    $form->add('type', CheckboxType::class, array(
+                    'attr' => array('class' => 'typeTicket'),
+                    'label' => 'Billet demi-journée  ->',
+                    'required' => false));
+                }
+            });*/
+
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
