@@ -20,7 +20,7 @@ class Price
         return $age;
     }
 
-    public function calculateRateType($age, $reduced)
+    public function calculateRateType($age, $reduced = false)
     {
         if ($age < 4){
             $rateType = 'free';
