@@ -15,13 +15,13 @@ use PROJET\PlatformBundle\Count\Check;
 use PROJET\PlatformBundle\Count\Count;
 use PROJET\PlatformBundle\SubmitForm\SubmitForm;
 use PROJET\PlatformBundle\Billing\Billing;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TicketController extends Controller
 {
-    public function indexAction($id)
+    public function indexAction($id, EntityManagerInterface $em)
     {
-        $em             = $this->getDoctrine()->getManager();
-        $reservation    = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
+        $reservation    = $em->getRepository(Reservation::class)->find($id);
         $apiEmail       = $reservation->getEmail();
         $serviceBilling = $this->get(Billing::class);
         $totalPrice     = $serviceBilling->calculateTotalPrice($reservation);
@@ -40,17 +40,21 @@ class TicketController extends Controller
         ));
     }
 
-    public function addAction(Request $request)
+    public function addAction(Request $request, EntityManagerInterface $em)
     {
-        $em          = $this->getDoctrine()->getManager();
         $reservation = new Reservation();
         $form        = $this->get('form.factory')->create(ReservationType::class, $reservation);
 
         $serviceCheck     = $this->get(Check::class);
-        $ticketCountToDay = $serviceCheck->checkTicketCountToDay($em);
-
+        $ticketCountToDay = $serviceCheck->checkTicketCountToDay();
 
         $form->handleRequest($request);
+
+        if ($request->isXmlHttpRequest())
+        {
+            $ticketCount = $serviceCheck->checkTicketCount($request);
+            return new JsonResponse($ticketCount);
+        }
 
         if (!$request->isXmlHttpRequest() && $form->isSubmitted() && $form->isValid()) {
             $serviceSubmitForm = $this->get(SubmitForm::class);
@@ -59,18 +63,12 @@ class TicketController extends Controller
            switch ($submitForm) {
                 case 1:
                     $request->getSession()->getFlashBag()->add('info', 'Il n\'y a plus assé de places pour ce jour.');
+                    var_dump("case1");
                     return $this->redirectToRoute('projet_platform_add');
-                    break;
-                case 2:
+                case 2:                
+                    var_dump("case2");
                     return $this->redirectToRoute('projet_platform_home', array('id' => $reservation->getId()));
-                    break;
             }
-        }
-
-        if ($request->isXmlHttpRequest())
-        {
-            $ticketCount = $serviceCheck->checkTicketCount($request, $em);
-            return new JsonResponse($ticketCount);
         }
 
         return $this->render('PROJETPlatformBundle:Reservation:add.html.twig', array(

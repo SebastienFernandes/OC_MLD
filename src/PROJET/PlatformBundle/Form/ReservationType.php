@@ -33,7 +33,7 @@ class ReservationType extends AbstractType
                 'label'    => 'Billet demi-journée  ->',
                 'required' => false,
             ))
-            ->add('tickets',     collectionType::class, array(
+            ->add('tickets',     CollectionType::class, array(
                 'label'         => false,
                 'entry_type'    => TicketType::class,
                 'entry_options' => array('label' => false),

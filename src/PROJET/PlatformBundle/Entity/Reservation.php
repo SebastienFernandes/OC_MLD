@@ -51,11 +51,7 @@ class Reservation
     /**
      * @var \stdClass
      *
-     * @Assert\Collection(
-     *      fields = {
-     *          @Assert\NotBlank()
-     *      }
-     * )
+     * @Assert\Valid(traverse=true)
      *
      * @Assert\NotNull()
      * @ORM\ManyToMany(targetEntity="PROJET\PlatformBundle\Entity\Ticket", cascade={"persist"})

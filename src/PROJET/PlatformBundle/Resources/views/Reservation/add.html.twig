@@ -17,6 +17,10 @@
     {% for message in app.session.flashbag.get('info') %}
       <div class="alert alert-info">Message flash : {{ message }}</div>
     {% endfor %}
+
+    {% for message in app.session.flashbag.get('error') %}
+      <div class="alert alert-error">Message flash : {{ message }}</div>
+    {% endfor %}
     
     <p id="places">places: {{ ticketCountToDay }} / 20</p>
 
@@ -81,8 +85,8 @@
         };
 
         submit.onclick=function() {
-            //toggleValidation();
-        }
+            toggleValidation();
+        };
 
         function toggleValidation() {
             var formLi = document.getElementsByClassName('formLi');
@@ -93,7 +97,7 @@
                 input.setAttribute('disabled', true);
                 alert('Aucun billets renseignés');
             }
-        }
+        };
 
         $('#projet_platformbundle_reservation_date_month').change(function(){
             jsonDate();
