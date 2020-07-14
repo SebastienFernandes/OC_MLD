@@ -52,18 +52,22 @@
         var submit         = document.getElementById('projet_platformbundle_reservation_save');
 
         jQuery(document).ready(function() {
+            $('.remove-ticket').click(function(e) {
+                e.preventDefault();
+                $(this).parent().parent().remove();
+            });
             var $collectionHolder = $('ul.tickets');
             $collectionHolder.append($newLinkLi);
             $collectionHolder.data('index', $collectionHolder.find(':input').length);
 
             $addTicketLink.on('click', function(e) {
                 e.preventDefault();
-                addTicketForm($collectionHolder, $newLinkLi);
+                addTicketForm($collectionHolder);
                 toggleValidation();
             });
         });
 
-        function addTicketForm($collectionHolder, $newLinkLi) {
+        function addTicketForm($collectionHolder) {
             var prototype = $collectionHolder.data('prototype');
             var index     = $collectionHolder.data('index');
             var newForm   = prototype;
@@ -72,14 +76,11 @@
 
             $collectionHolder.data('index', index + 1);
 
-            var $newFormLi = $('<li class="formLi"></li>').append(newForm);
-            $newFormLi.append('<a href="#" class="remove-ticket btn btn-danger">Supprimer le Billet</a>')
-            $newLinkLi.before($newFormLi);
+            var $newFormLi = $('#projet_platformbundle_reservation_tickets').append(newForm);
 
             $('.remove-ticket').click(function(e) {
                 e.preventDefault();
-                $(this).parent().remove();
-                return false;
+                $(this).parent().parent().remove();
             });           
                 
         };
@@ -89,9 +90,9 @@
         };
 
         function toggleValidation() {
-            var formLi = document.getElementsByClassName('formLi');
+            var formLi = document.querySelector('#projet_platformbundle_reservation_tickets');
             var input  = document.getElementById('projet_platformbundle_reservation_save');
-            if(formLi.length > 0){
+            if(formLi.children.length > 0){
                 input.removeAttribute('disabled');
             } else {
                 input.setAttribute('disabled', true);

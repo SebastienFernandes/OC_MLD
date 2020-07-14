@@ -32,7 +32,9 @@ class SubmitForm
             $BirthDate = $ticket->getBirthDate();
             $reduced   = $ticket->getReducedPrice();
             $age       = $this->price->calculateAge($BirthDate);
+            
             $rateType  = $this->price->calculateRateType($age, $reduced);
+            
             $rate      = $this->price->calculateRate($rateType, $dayType);
             $ticket->setRateType($rateType);
             $ticket->setRate($rate);

@@ -63,10 +63,8 @@ class TicketController extends Controller
            switch ($submitForm) {
                 case 1:
                     $request->getSession()->getFlashBag()->add('info', 'Il n\'y a plus assé de places pour ce jour.');
-                    var_dump("case1");
                     return $this->redirectToRoute('projet_platform_add');
-                case 2:                
-                    var_dump("case2");
+                case 2:
                     return $this->redirectToRoute('projet_platform_home', array('id' => $reservation->getId()));
             }
         }
@@ -77,9 +75,8 @@ class TicketController extends Controller
         ));
     }
 
-    public function delAction($id)
+    public function delAction($id, EntityManagerInterface $em)
     {
-        $em             = $this->getDoctrine()->getManager();
         $reservation    = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
         $serviceCounter = $this->get(Count::class);
         $removeTicket   = $serviceCounter->removeTicketCounter($em, $reservation);
@@ -100,9 +97,8 @@ class TicketController extends Controller
         return $this->redirectToRoute('projet_core_homepage');
     }
 
-    public function billingAction(Request $request, $id)
+    public function billingAction(Request $request, $id, EntityManagerInterface $em)
     {
-        $em             = $this->getDoctrine()->getManager();
         $reservation    = $em->getRepository('PROJETPlatformBundle:Reservation')->find($id);
         $serviceBilling = $this->get(Billing::class);
         $totalPrice     = $serviceBilling->calculateTotalPrice($reservation);
@@ -126,7 +122,7 @@ class TicketController extends Controller
                 );
 
             $this->get('mailer')->send($message);
-            return $this->render('Emails/email.html.twig', array(
+            return $this->render('PROJETPlatformBundle:Reservation:billet.html.twig', array(
                 'reservation' => $reservation
             ));
         }        

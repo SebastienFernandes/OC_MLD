@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 
 class TicketType extends AbstractType
 {
@@ -36,7 +37,9 @@ class TicketType extends AbstractType
             ->add('reducedPrice',   CheckboxType::class, array(
                 'attr' => array('class' => 'reducedPrice'),                
                 'label' => 'Billet tarif réduit  ->',
-                'required' => false));
+                'required' => false))
+            ->add('supprimer', ButtonType::class, [
+                'attr' => array('class' => 'remove-ticket btn btn-danger')]);
 
         
     }

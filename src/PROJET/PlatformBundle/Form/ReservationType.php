@@ -43,26 +43,6 @@ class ReservationType extends AbstractType
             ->add('save',        SubmitType::class, array(
                 'attr'     => array('class' => 'btn btn-warning'),
                 'label'    => 'Valider'));
-
-        /*$builder
-            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event){
-                $form = $event->getForm();
-                $day = $form->getData()->getDate() || new \DateTime();
-                if ($day->format('G') >= "14"){
-                    $form->add('type', CheckboxType::class, array(
-                    'attr' => array('class' => 'typeTicket'),
-                    'label' => 'Billet demi-journée  ->',
-                    'disabled' => true,
-                    'data' => true,
-                    'required' => false));
-                }else{
-                    $form->add('type', CheckboxType::class, array(
-                    'attr' => array('class' => 'typeTicket'),
-                    'label' => 'Billet demi-journée  ->',
-                    'required' => false));
-                }
-            });*/
-
     }
 
     /**
