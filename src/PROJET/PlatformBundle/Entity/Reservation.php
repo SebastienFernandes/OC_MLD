@@ -6,12 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use PROJET\PlatformBundle\Validator\Constraints as ReservationAssert;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * Reservation
  *
  * @ORM\Table(name="reservation")
- * @ORM\Entity(repositoryClass="PROJET\PlatformBundle\Repository\ReservationRepository")
+ * @ORM\Entity(repositoryClass="PROJET\PlatformBundle\Repository\ReservationRepository") 
+ * @ReservationAssert\ReservationDemiJournee
  */
 class Reservation
 {
@@ -64,6 +66,11 @@ class Reservation
      * @ORM\Column(name="type", type="boolean")
      */
     private $type = true;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $code;
 
     public function __construct()
     {
@@ -186,5 +193,17 @@ class Reservation
     public function getType()
     {
         return $this->type;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
+
+        return $this;
     }
 }

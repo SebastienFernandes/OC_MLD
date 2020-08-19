@@ -23,7 +23,7 @@ class SubmitForm
         $ticketCounter = $this->count->addTicketCounter($em, $reservation);
 
         if (null === $ticketCounter){
-            return 1;
+            throw new \InvalidArgumentException("Il n'y a plus assé de places pour ce jour.");
         }
 
         $dayType = $reservation->getType();
@@ -33,9 +33,14 @@ class SubmitForm
             $reduced   = $ticket->getReducedPrice();
             $age       = $this->price->calculateAge($BirthDate);
             
-            $rateType  = $this->price->calculateRateType($age, $reduced);
-            
-            $rate      = $this->price->calculateRate($rateType, $dayType);
+            try {
+                $rateType  = $this->price->calculateRateType($age, $reduced);
+            }
+            catch(\InvalidArgumentException $exception) {
+                throw $exception;
+            }
+
+            $rate = $this->price->calculateRate($rateType, $dayType);
             $ticket->setRateType($rateType);
             $ticket->setRate($rate);
             $em->persist($ticket);
@@ -45,7 +50,7 @@ class SubmitForm
         $em->persist($reservation);
         $em->flush();
 
-        return 2;        
+        return true;        
     }
     
 }

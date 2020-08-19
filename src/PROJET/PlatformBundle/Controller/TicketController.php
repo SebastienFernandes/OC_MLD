@@ -58,14 +58,15 @@ class TicketController extends Controller
 
         if (!$request->isXmlHttpRequest() && $form->isSubmitted() && $form->isValid()) {
             $serviceSubmitForm = $this->get(SubmitForm::class);
-            $submitForm        = $serviceSubmitForm->submit($request, $em, $reservation, $form);
 
-           switch ($submitForm) {
-                case 1:
-                    $request->getSession()->getFlashBag()->add('info', 'Il n\'y a plus assé de places pour ce jour.');
-                    return $this->redirectToRoute('projet_platform_add');
-                case 2:
-                    return $this->redirectToRoute('projet_platform_home', array('id' => $reservation->getId()));
+            try{
+                $serviceSubmitForm->submit($request, $em, $reservation, $form);
+
+                return $this->redirectToRoute('projet_platform_home', array('id' => $reservation->getId()));
+            } catch(\InvalidArgumentException $exception) {
+                $request->getSession()->getFlashBag()->add('info', $exception->getMessage());
+
+                return $this->redirectToRoute('projet_platform_add');
             }
         }
 

@@ -39,7 +39,7 @@ class Check
         $day        = new \DateTime($y .'/'. $m .'/'. $d);
 
         $errorExept      = $this->validator->validate($day, new ReservationExeptDate());
-        $errorViolation      = $this->validator->validate($day, new ReservationViolationDay());
+        $errorViolation  = $this->validator->validate($day, new ReservationViolationDay());
 
         $toDay      = (new \DateTime())->modify('-1 day');
         $reservDate = $this->reservDate($this->em, $day);
